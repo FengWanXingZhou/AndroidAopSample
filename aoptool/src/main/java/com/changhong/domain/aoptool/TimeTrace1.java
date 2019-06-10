@@ -1,4 +1,4 @@
-package com.example.androidaopsample;
+package com.changhong.domain.aoptool;
 
 
 import java.lang.annotation.ElementType;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface TimeTrace {
+public @interface TimeTrace1 {
 
     String tag() default "time";
 }

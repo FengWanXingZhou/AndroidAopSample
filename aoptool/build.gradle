@@ -1,24 +1,16 @@
-apply plugin: 'com.android.application'
-
-
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
 
     signingConfigs{
 
-        config{
-            keyAlias 'android'
-            keyPassword 'android'
-            storeFile file("${project.rootDir}/signFile/android.jks")
-            storePassword 'android'
 
-        }
 
     }
 
     defaultConfig {
-        applicationId "com.example.androidaopsample"
+        //applicationId "com.example.androidaopsample"
         minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
@@ -29,35 +21,47 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+
         }
     }
 }
+
 import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
-
+import com.android.build.gradle.LibraryPlugin
 //获取 log实例
 final def log = project.logger
 //获取variants
-final def variants = project.android.applicationVariants
+final def variants = project.android.libraryVariants
 variants.all { variant ->
     if (!variant.buildType.isDebuggable()) {
         log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
         //return;
     }
-    log.debug("build type '${variant.buildType.name}'.")
+    LibraryPlugin plugin = project.plugins.getPlugin(LibraryPlugin)
+    log.error("build type '${variant.buildType.name}'.")
 //编译时做如下处理
-    JavaCompile javaCompile = variant.javaCompile
+    JavaCompile javaCompile = variant.getJavaCompileProvider().get()
     javaCompile.doLast {
+        /*String[] args = ["-showWeaveInfo",
+                         "-1.8",
+                         "-inpath", javaCompile.destinationDir.toString(),
+                         "-aspectpath", javaCompile.classpath.asPath,
+                         "-d", javaCompile.destinationDir.toString(),
+                         "-classpath", javaCompile.classpath.asPath,
+                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]*/
+
         String[] args = ["-showWeaveInfo",
                          "-1.8",
                          "-inpath", javaCompile.destinationDir.toString(),
                          "-aspectpath", javaCompile.classpath.asPath,
                          "-d", javaCompile.destinationDir.toString(),
                          "-classpath", javaCompile.classpath.asPath,
-                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
-        log.debug "ajc args: " + Arrays.toString(args)
+                         "-bootclasspath", plugin.project.android.bootClasspath.join(
+                File.pathSeparator)]
+
+        log.error "ajc args: " + Arrays.toString(args)
 
         MessageHandler handler = new MessageHandler(true);
         new Main().run(args, handler);
@@ -84,7 +88,9 @@ variants.all { variant ->
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api project(":aoptool")
+
+   // def dependencies = rootProject.ext.dependencies
+    implementation 'org.aspectj:aspectjrt:1.9.4'
     implementation 'org.aspectj:aspectjrt:1.9.4'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

@@ -11,18 +11,19 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 
-@Aspect
+//@Aspect
 public class TimeAspectJ {
 
     public static final String TAG = "TimeAspectJ";
 
-    @Pointcut("execution(@com.example.androidaopsample.TimeTrace * *(..))")
-    public void printTime(){
+    //@Pointcut("execution(@com.example.androidaopsample.TimeTrace1 * *(..))")
+    public void timeTrace(){
         Log.i(TAG,"printTime");
     }
 
-    /*@Around("printTime()")
+    //@Around("timeTrace()")
     public void weaveJointPointAround(ProceedingJoinPoint joinPoint) throws Throwable{
 
         Log.i(TAG,"Around joinPoint");
@@ -31,16 +32,19 @@ public class TimeAspectJ {
             joinPoint.proceed();
 
         Log.i(TAG,"Around joinPoint cost time:"+(SystemClock.uptimeMillis()-startTime));
-    }*/
+    }
 
-    @After("printTime()")
+    /*@After("printTime()")
     public void weaveJointPointAfter(JoinPoint joinPoint) throws Throwable{
 
         Log.i(TAG,"After joinPoint");
         long startTime = SystemClock.uptimeMillis();
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        String method = methodSignature.getMethod().getName();
+        TimeTrace1 timeTrace =  methodSignature.getMethod().getAnnotation(TimeTrace1.class);
 
-
-        Log.i(TAG,"After joinPoint cost time:"+(SystemClock.uptimeMillis()-startTime));
+        Log.i(TAG,"After joinPoint cost time:"+(SystemClock.uptimeMillis()-startTime)
+                +" method = "+method+" timeTrace:"+timeTrace.tag());
     }
 
     @Before("printTime()")
@@ -51,6 +55,6 @@ public class TimeAspectJ {
 
 
         Log.i(TAG,"Before joinPoint cost time:"+(SystemClock.uptimeMillis()-startTime));
-    }
+    }*/
 
 }

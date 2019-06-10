@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.changhong.domain.aoptool.TimeTrace1;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         test();
     }
-    @TimeTrace
+    @TimeTrace1(tag = "time")
     private void test(){
         Log.i(TimeAspectJ.TAG,"test real function");
     }
