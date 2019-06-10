@@ -30,11 +30,11 @@ public class TimeAspectJ {
 
 
 
-        /*MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
         String method = methodSignature.getMethod().getName();
         TimeTrace1 timeTrace1 =  methodSignature.getMethod().getAnnotation(TimeTrace1.class);
 
-        String tag = timeTrace1.tag();*/
+        String tag = timeTrace1.tag();
         Log.i(TAG," cost time:"+(SystemClock.uptimeMillis()-startTime));
     }
 

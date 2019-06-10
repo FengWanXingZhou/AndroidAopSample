@@ -4,6 +4,8 @@ package com.example.androidaopsample;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.changhong.domain.aoptool.TimeTrace1;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.After;
