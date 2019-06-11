@@ -19,9 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-#-keep class org.aspectj.**{*;}
-#-keep interface org.aspectj.**{*;}
-#-keep class com.changhong.domain.aoptool.**{*;}
--keepclasseswithmembers class * {
-    @com.changhong.domain.aoptool.TimeTrace <methods>;
-}
