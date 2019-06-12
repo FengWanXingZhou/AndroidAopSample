@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         test();
         new Test().testLibraryAspectJ();
+        new Test().testLibraryAspectJReturn();
     }
     @TimeTrace(tag = "time")
     private void test(){

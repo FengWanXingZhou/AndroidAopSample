@@ -10,5 +10,10 @@ public class Test {
     public void testLibraryAspectJ(){
         Log.i(TimeAspectJ.TAG,"testLibraryAspectJ real function");
     }
+    @TimeTrace
+    public int testLibraryAspectJReturn(){
+        Log.i(TimeAspectJ.TAG,"testLibraryAspectJReturn real function");
+        return 1;
+    }
 
 }
