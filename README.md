@@ -9,7 +9,7 @@
 
 # AspectJPlugin
 
-封装了Gradle脚本，在进行编译时使用ajc编译器替代java compiler
+封装了Gradle脚本，在进行编译时使用ajc编译器解析相关切面
 
 插件上传到本地Repository目录
 
