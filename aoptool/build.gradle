@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 
+apply plugin: 'com.example.aspectjplugin'
 android {
     compileSdkVersion 28
 
@@ -26,7 +27,7 @@ android {
     }
 }
 
-import org.aspectj.bridge.IMessage
+/*import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 import com.android.build.gradle.LibraryPlugin
@@ -44,13 +45,13 @@ variants.all { variant ->
 //编译时做如下处理
     JavaCompile javaCompile = variant.getJavaCompileProvider().get()
     javaCompile.doLast {
-        /*String[] args = ["-showWeaveInfo",
+        *//*String[] args = ["-showWeaveInfo",
                          "-1.8",
                          "-inpath", javaCompile.destinationDir.toString(),
                          "-aspectpath", javaCompile.classpath.asPath,
                          "-d", javaCompile.destinationDir.toString(),
                          "-classpath", javaCompile.classpath.asPath,
-                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]*/
+                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]*//*
 
         String[] args = ["-showWeaveInfo",
                          "-1.8",
@@ -84,7 +85,7 @@ variants.all { variant ->
             }
         }
     }
-}
+}*/
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

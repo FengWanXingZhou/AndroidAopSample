@@ -33,7 +33,7 @@ android {
         }
     }
 }
-import org.aspectj.bridge.IMessage
+/*import org.aspectj.bridge.IMessage
 import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 
@@ -80,7 +80,7 @@ variants.all { variant ->
             }
         }
     }
-}
+}*/
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

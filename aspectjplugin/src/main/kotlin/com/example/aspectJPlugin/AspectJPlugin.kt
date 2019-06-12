@@ -1,5 +1,7 @@
 package com.example.aspectJPlugin
 
+import com.android.build.gradle.AppExtension
+import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.api.ApplicationVariant
@@ -21,74 +23,122 @@ class AspectJPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         var log = project.logger
         //获取variants
-
+        log.warn("apply project name:"+project.name)
         var android = project.extensions.getByName("android")
 
 
+
+
         project.plugins.all{
+
+            log.warn("plugin name:"+it.toString())
 
             when(it){
 
                 is LibraryPlugin->{
 
-                    var libraryExtension:LibraryExtension = project.extensions
-                            .getByName("com.android.library") as LibraryExtension
+                    var libraryExtension = project.extensions.getByType(LibraryExtension::class.java)
 
-                            libraryExtension.libraryVariants.all{variant->{
+                            libraryExtension.libraryVariants.all{
 
+                                if (!it.buildType.isDebuggable()) {
+                                    log.debug("Skipping non-debuggable build type '${it.buildType.name}'.")
+                                    //return;
+                                }
+                                log.warn("library build type '${it.buildType.name}'.")
+
+                                //编译时做如下处理
+                                var javaCompile = it.javaCompileProvider.get()
+                                javaCompile.doLast {
+                                    var args:Array<String> = arrayOf("-showWeaveInfo",
+                                            "-1.8",
+                                            "-inpath", javaCompile.destinationDir.toString(),
+                                            "-aspectpath", javaCompile.classpath.asPath,
+                                            "-d", javaCompile.destinationDir.toString(),
+                                            "-classpath", javaCompile.classpath.asPath,
+                                            "-bootclasspath", libraryExtension.bootClasspath
+                                            .joinToString(File.pathSeparator))
+
+
+                                    var handler:MessageHandler = MessageHandler(true)
+
+                                    Main().run(args, handler)
+                                    for (message in handler.getMessages(null, true)) {
+                                        when (message.getKind()) {
+                                            IMessage.ABORT ->{}
+                                            IMessage.ERROR ->{}
+                                            IMessage.FAIL ->log.error(message.message, message.thrown)
+                                            IMessage.WARNING ->log.warn(message.message, message.thrown)
+                                            IMessage.INFO ->log.info(message.message, message.thrown)
+                                            IMessage.DEBUG ->log.debug(message.message, message.thrown)
+                                            else ->{
+
+                                            }
+                                        }
+                                    }
+
+                                }
                             }
 
+                }
+
+                is AppPlugin ->{
+
+                    var appExtension = project.extensions.getByType(AppExtension::class.java)
+
+                    appExtension.applicationVariants.all{
+                        if (!it.buildType.isDebuggable()) {
+                            log.warn("Skipping non-debuggable build type '${it.buildType.name}'.")
+                            //return;
+                        }
+                        log.warn("application build type '${it.buildType.name}'.")
+
+                        //编译时做如下处理
+                        var javaCompile = it.javaCompileProvider.get()
+                        javaCompile.doLast {
+                            var args:Array<String> = arrayOf("-showWeaveInfo",
+                                    "-1.8",
+                                    "-inpath", javaCompile.destinationDir.toString(),
+                                    "-aspectpath", javaCompile.classpath.asPath,
+                                    "-d", javaCompile.destinationDir.toString(),
+                                    "-classpath", javaCompile.classpath.asPath,
+                                    "-bootclasspath", appExtension.bootClasspath
+                                    .joinToString(File.pathSeparator))
+
+
+                            var handler:MessageHandler = MessageHandler(true)
+
+                            Main().run(args, handler)
+                            for (message in handler.getMessages(null, true)) {
+                                when (message.getKind()) {
+                                    IMessage.ABORT ->{}
+                                    IMessage.ERROR ->{}
+                                    IMessage.FAIL ->log.error(message.message, message.thrown)
+                                    IMessage.WARNING ->log.warn(message.message, message.thrown)
+                                    IMessage.INFO ->log.info(message.message, message.thrown)
+                                    IMessage.DEBUG ->log.debug(message.message, message.thrown)
+                                    else ->{
+
+                                    }
+                                }
                             }
-                }
-            }
-
-
-        }
-
-        project.plugins.withId("com.android.application"){
-
-
-            var variants = project.android.applicationVariants
-            variants.all { variant ->
-
-                if (!variant.buildType.isDebuggable()) {
-                    log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
-                    //return;
-                }
-                log.debug("build type '${variant.buildType.name}'.")
-
-                //编译时做如下处理
-                var javaCompile = variant.javaCompile
-                javaCompile.doLast {
-                    var args:Array<String> = arrayOf("-showWeaveInfo",
-                            "-1.8",
-                            "-inpath", javaCompile.destinationDir.toString(),
-                            "-aspectpath", javaCompile.classpath.asPath,
-                            "-d", javaCompile.destinationDir.toString(),
-                            "-classpath", javaCompile.classpath.asPath,
-                            "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator))
-
-
-                    var handler:MessageHandler = MessageHandler(true)
-
-                    Main().run(args, handler)
-                    for (message in handler.getMessages(null, true)) {
-                    when (message.getKind()) {
-                        IMessage.ABORT ->{}
-                        IMessage.ERROR ->{}
-                        IMessage.FAIL ->log.error(message.message, message.thrown)
-                        IMessage.WARNING ->log.warn(message.message, message.thrown)
-                        IMessage.INFO ->log.info(message.message, message.thrown)
-                        IMessage.DEBUG ->log.debug(message.message, message.thrown)
-                        else ->{
 
                         }
                     }
+
+
                 }
+
+                else->{
+
                 }
             }
 
+
+
         }
+
+
 
 
     }
