@@ -21,36 +21,30 @@ class AspectJPlugin : Plugin<Project> {
 
 
     override fun apply(project: Project) {
-        var log = project.logger
+        val log = project.logger
         //获取variants
-        log.warn("apply project name:"+project.name)
-        var android = project.extensions.getByName("android")
-
-
-
+        log.debug("apply project name:"+project.name)
 
         project.plugins.all{
 
-            log.warn("plugin name:"+it.toString())
-
             when(it){
-
+                //应用com.android.library插件，即library模块
                 is LibraryPlugin->{
 
-                    var libraryExtension = project.extensions.getByType(LibraryExtension::class.java)
+                    val libraryExtension = project.extensions.getByType(LibraryExtension::class.java)
 
                             libraryExtension.libraryVariants.all{
 
-                                if (!it.buildType.isDebuggable()) {
+                                if (!it.buildType.isDebuggable) {
                                     log.debug("Skipping non-debuggable build type '${it.buildType.name}'.")
                                     //return;
                                 }
-                                log.warn("library build type '${it.buildType.name}'.")
+                                log.debug("library build type '${it.buildType.name}'.")
 
                                 //编译时做如下处理
-                                var javaCompile = it.javaCompileProvider.get()
+                                val javaCompile = it.javaCompileProvider.get()
                                 javaCompile.doLast {
-                                    var args:Array<String> = arrayOf("-showWeaveInfo",
+                                    val args:Array<String> = arrayOf("-showWeaveInfo",
                                             "-1.8",
                                             "-inpath", javaCompile.destinationDir.toString(),
                                             "-aspectpath", javaCompile.classpath.asPath,
@@ -60,11 +54,11 @@ class AspectJPlugin : Plugin<Project> {
                                             .joinToString(File.pathSeparator))
 
 
-                                    var handler:MessageHandler = MessageHandler(true)
+                                    val handler = MessageHandler(true)
 
                                     Main().run(args, handler)
                                     for (message in handler.getMessages(null, true)) {
-                                        when (message.getKind()) {
+                                        when (message.kind) {
                                             IMessage.ABORT ->{}
                                             IMessage.ERROR ->{}
                                             IMessage.FAIL ->log.error(message.message, message.thrown)
@@ -81,22 +75,22 @@ class AspectJPlugin : Plugin<Project> {
                             }
 
                 }
-
+                //应用com.android.application插件，即application模块
                 is AppPlugin ->{
 
-                    var appExtension = project.extensions.getByType(AppExtension::class.java)
+                    val appExtension = project.extensions.getByType(AppExtension::class.java)
 
                     appExtension.applicationVariants.all{
-                        if (!it.buildType.isDebuggable()) {
+                        if (!it.buildType.isDebuggable) {
                             log.warn("Skipping non-debuggable build type '${it.buildType.name}'.")
-                            //return;
+                             //return;
                         }
-                        log.warn("application build type '${it.buildType.name}'.")
+                        log.debug("application build type '${it.buildType.name}'.")
 
                         //编译时做如下处理
-                        var javaCompile = it.javaCompileProvider.get()
+                        val javaCompile = it.javaCompileProvider.get()
                         javaCompile.doLast {
-                            var args:Array<String> = arrayOf("-showWeaveInfo",
+                            val args:Array<String> = arrayOf("-showWeaveInfo",
                                     "-1.8",
                                     "-inpath", javaCompile.destinationDir.toString(),
                                     "-aspectpath", javaCompile.classpath.asPath,
@@ -106,11 +100,11 @@ class AspectJPlugin : Plugin<Project> {
                                     .joinToString(File.pathSeparator))
 
 
-                            var handler:MessageHandler = MessageHandler(true)
+                            val handler = MessageHandler(true)
 
                             Main().run(args, handler)
                             for (message in handler.getMessages(null, true)) {
-                                when (message.getKind()) {
+                                when (message.kind) {
                                     IMessage.ABORT ->{}
                                     IMessage.ERROR ->{}
                                     IMessage.FAIL ->log.error(message.message, message.thrown)
