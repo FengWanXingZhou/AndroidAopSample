@@ -26,7 +26,7 @@ class AspectJPlugin : Plugin<Project> {
         log.debug("apply project name:"+project.name)
 
         project.plugins.all{
-
+            log.debug("plugin name:"+it.toString())
             when(it){
                 //应用com.android.library插件，即library模块
                 is LibraryPlugin->{
