@@ -23,7 +23,7 @@ public class TimeAspectJ {
     @Around("timeTrace()")
     public void weaveJointPointAround(ProceedingJoinPoint joinPoint) throws Throwable{
 
-        Log.i(TAG,"Around joinPoint");
+        //Log.i(TAG,"Around joinPoint");
         long startTime = SystemClock.uptimeMillis();
 
         joinPoint.proceed();
