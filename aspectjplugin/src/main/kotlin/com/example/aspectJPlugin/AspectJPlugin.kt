@@ -23,10 +23,16 @@ class AspectJPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val log = project.logger
         //获取variants
-        log.debug("apply project name:"+project.name)
+        log.warn("apply project name:"+project.name)
+
+
+
+        project.repositories.add(project.repositories.mavenCentral())
+
+        project.dependencies.add("implementation","org.aspectj:aspectjrt:1.9.4")
 
         project.plugins.all{
-            log.debug("plugin name:"+it.toString())
+            log.warn("plugin name:"+it.toString())
             when(it){
                 //应用com.android.library插件，即library模块
                 is LibraryPlugin->{
@@ -36,10 +42,10 @@ class AspectJPlugin : Plugin<Project> {
                             libraryExtension.libraryVariants.all{
 
                                 if (!it.buildType.isDebuggable) {
-                                    log.debug("Skipping non-debuggable build type '${it.buildType.name}'.")
+                                    log.warn("Skipping non-debuggable build type '${it.buildType.name}'.")
                                     //return;
                                 }
-                                log.debug("library build type '${it.buildType.name}'.")
+                                log.warn("library build type '${it.buildType.name}'.")
 
                                 //编译时做如下处理
                                 val javaCompile = it.javaCompileProvider.get()
@@ -85,7 +91,7 @@ class AspectJPlugin : Plugin<Project> {
                             log.warn("Skipping non-debuggable build type '${it.buildType.name}'.")
                              //return;
                         }
-                        log.debug("application build type '${it.buildType.name}'.")
+                        log.warn("application build type '${it.buildType.name}'.")
 
                         //编译时做如下处理
                         val javaCompile = it.javaCompileProvider.get()

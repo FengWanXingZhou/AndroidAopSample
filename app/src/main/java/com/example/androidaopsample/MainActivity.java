@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.changhong.domain.aoptool.TimeAspectJ;
 import com.changhong.domain.aoptool.TimeTrace;
+import com.example.testlibrary.Test;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         test();
+        new Test().testLibraryAspectJ();
     }
     @TimeTrace(tag = "time")
     private void test(){

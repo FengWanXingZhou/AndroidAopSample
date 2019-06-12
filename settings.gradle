@@ -1,1 +1,1 @@
-include ':app',':aoptool', ':aspectjplugin'
+include ':app',':aoptool', ':aspectjplugin', ':testlibrary'
