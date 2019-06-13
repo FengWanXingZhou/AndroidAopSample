@@ -29,13 +29,33 @@ public class TimeAspectJ {
         Object result = joinPoint.proceed();
 
         MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
-        String method = methodSignature.getMethod().getName();
+
+
+
+        String methodName = methodSignature.getMethod().getName();
         TimeTrace timeTrace =  methodSignature.getMethod().getAnnotation(TimeTrace.class);
 
         String tag = timeTrace.tag();
 
 
-        Log.i(tag,methodSignature.toShortString()+ " cost time:"
+        Object[] args = joinPoint.getArgs();
+        String arg = null;
+        if(args != null) {
+
+            for (int i = 0; i < args.length; i++) {
+                Log.i(tag, " args = " + args[i].toString());
+                if(i == 0){
+                    arg = args[i].toString();
+                }else{
+                    arg = arg + ","+args[i].toString();
+                }
+
+            }
+        }
+        Log.i(tag,"method "+methodSignature.toShortString()
+                +" args:"+arg
+
+                + " cost time:"
                 +(SystemClock.uptimeMillis()-startTime)+" mills");
 
         return result;

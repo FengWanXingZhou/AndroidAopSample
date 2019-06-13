@@ -8,6 +8,7 @@ import android.util.Log;
 import com.changhong.domain.aoptool.TimeAspectJ;
 import com.changhong.domain.aoptool.TimeTrace;
 import com.example.testlibrary.Test;
+import com.example.testlibrary.TestArgs;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //test();
         new Test().testLibraryAspectJ();
-        new Test().testLibraryAspectJReturn();
+        new Test().testLibraryAspectJReturn(new TestArgs());
     }
     @TimeTrace(tag = "time")
     private void test(){
