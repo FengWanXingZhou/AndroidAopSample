@@ -21,7 +21,28 @@ public class TimeAspectJ {
     }
 
     @Around("timeTrace()")
-    public void weaveJointPointAround(ProceedingJoinPoint joinPoint) throws Throwable{
+    public Object weaveJointPointAround(ProceedingJoinPoint joinPoint) throws Throwable{
+
+        //Log.i(TAG,"Around joinPoint");
+        long startTime = SystemClock.uptimeMillis();
+
+        Object result = joinPoint.proceed();
+
+        MethodSignature methodSignature = (MethodSignature)joinPoint.getSignature();
+        String method = methodSignature.getMethod().getName();
+        TimeTrace timeTrace =  methodSignature.getMethod().getAnnotation(TimeTrace.class);
+
+        String tag = timeTrace.tag();
+
+
+        Log.i(tag,methodSignature.toShortString()+ " cost time:"
+                +(SystemClock.uptimeMillis()-startTime)+" mills");
+
+        return result;
+    }
+
+    /*@Around("timeTrace()")
+    public void weaveJointPointAround(JoinPoint joinPoint) throws Throwable{
 
         //Log.i(TAG,"Around joinPoint");
         long startTime = SystemClock.uptimeMillis();
@@ -35,7 +56,7 @@ public class TimeAspectJ {
         String tag = timeTrace.tag();
         Log.i(tag,methodSignature.toShortString()+ " cost time:"+(SystemClock.uptimeMillis()-startTime)+" mills");
     }
-
+*/
 
 
 }
